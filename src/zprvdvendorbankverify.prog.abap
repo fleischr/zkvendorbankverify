@@ -5,12 +5,14 @@
 *&---------------------------------------------------------------------*
 REPORT zprvdvendorbankverify.
 
-PARAMETERS: p_vndr TYPE lifnr.
+PARAMETERS: p_vndr TYPE lifnr,
+            p_cntry type lfbk-banks.
 
 TYPES: BEGIN OF ty_vendorbank_proof,
          vendor_number  TYPE lfbk-lifnr,
          routing_number TYPE lfbk-bankl,
          account_number TYPE lfbk-bankn,
+         country_key    type lfbk-banks,
          date           TYPE sy-datum,
          id             TYPE string,
        END OF ty_vendorbank_proof.
@@ -31,9 +33,10 @@ DATA: lv_setup_success     TYPE boolean,
       lt_newbpis     TYPE TABLE OF zbpiobj,
       lv_timestamp type timestampl.
 
-SELECT SINGLE lifnr, bankl, bankn FROM lfbk
+SELECT SINGLE lifnr, bankl, bankn, banks FROM lfbk
     INTO @ls_vendorbank_proof
-    WHERE lifnr = @p_vndr.
+    WHERE lifnr = @p_vndr
+      and banks = @p_cntry.
 IF sy-subrc <> 0.
   "Indicate we have no data.
   ls_vendorbank_proof-vendor_number = p_vndr.
@@ -41,7 +44,7 @@ IF sy-subrc <> 0.
   ls_vendorbank_proof-account_number = 0.
 ENDIF.
 ls_vendorbank_proof-date = sy-datum.
-ls_vendorbank_proof-id = ls_vendorbank_proof-vendor_number && '|' && sy-datum.
+ls_vendorbank_proof-id = ls_vendorbank_proof-vendor_number && '|' &&  ls_vendorbank_proof-country_key && '|' && sy-datum.
 
 GET REFERENCE OF ls_vendorbank_proof INTO ls_vendorbank_data.
 
