@@ -6,7 +6,10 @@
 REPORT zprvdvendorbankverify.
 
 PARAMETERS: p_vndr TYPE lifnr,
-            p_cntry type lfbk-banks.
+            p_cntry type lfbk-banks,
+            p_tenant TYPE zprvdtenantid,
+            p_sbjact TYPE zprvdtenantid,
+            p_wrkgrp TYPE zprvdtenantid.
 
 TYPES: BEGIN OF ty_vendorbank_proof,
          vendor_number  TYPE lfbk-lifnr,
@@ -32,6 +35,18 @@ DATA: lv_setup_success     TYPE boolean,
       wa_bpiobj    TYPE zbpiobj,
       lt_newbpis     TYPE TABLE OF zbpiobj,
       lv_timestamp type timestampl.
+
+INITIALIZATION.
+
+  GET PARAMETER ID 'ZPRVDTENANT' FIELD p_tenant.
+  GET PARAMETER ID 'ZPRVDSUBJACCTID' FIELD p_sbjact.
+  GET PARAMETER ID 'ZPRVDWRKGRPID' FIELD p_wrkgrp.
+
+START-OF-SELECTION.
+
+lv_tenant = p_tenant.
+lv_subj_acct = p_sbjact.
+lv_workgroup_id = p_wrkgrp.
 
 SELECT SINGLE lifnr, bankl, bankn, banks FROM lfbk
     INTO @ls_vendorbank_proof

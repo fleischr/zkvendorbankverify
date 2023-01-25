@@ -16,6 +16,18 @@
      <ENTRY>ZK Vendor Bank Account Verification</ENTRY>
      <LENGTH>35</LENGTH>
     </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_CNTRY</KEY>
+     <ENTRY>Country</ENTRY>
+     <LENGTH>15</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_VNDR</KEY>
+     <ENTRY>Vendor ID</ENTRY>
+     <LENGTH>17</LENGTH>
+    </item>
    </TPOOL>
   </asx:values>
  </asx:abap>
